@@ -2,21 +2,20 @@
 </script>
 
 <main>
-    <div>
-        <p>Footer</p>
-    </div>
+    <div class="footer">Copyright 2021 | Rakib Joarder</div>
 </main>
 
 <style>
     div {
-        background-color: red;
+        background-color: #f7f7f7;
         color: white;
         box-sizing: border-box;
         padding: 10px;
         text-align: center;
     }
-    body {
-        margin: 0;
-        padding: 0;
+    .footer {
+        color: black;
+        padding: 20px;
+        font-size: 10px;
     }
 </style>

@@ -1,19 +1,23 @@
 <script>
-    export let title = "Header";
 </script>
 
 <main>
     <div>
-        <p>{title}</p>
+        <img src="svelte-welcome.png" alt="logo" />
     </div>
 </main>
 
 <style>
     div {
-        background-color: red;
+        background-color: #f7f7f7;
         color: white;
         box-sizing: border-box;
         padding: 10px;
         text-align: center;
+    }
+
+    img {
+        max-height: 100px;
+        margin-top: 20px;
     }
 </style>
