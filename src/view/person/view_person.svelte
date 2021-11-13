@@ -15,6 +15,7 @@
 
 	let people = [];
 
+	// get person from store.js
 	// var unsub = PersonStore.subscribe((data) => {
 	// 	people = data;
 	// });

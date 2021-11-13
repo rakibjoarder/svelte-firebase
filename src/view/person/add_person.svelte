@@ -13,7 +13,7 @@
 
 	let dispatch = createEventDispatcher();
 
-	// firestore
+	// firestore reference
 	let ref = collection(Firestoredb, "users");
 
 	const fields = {
@@ -31,7 +31,6 @@
 
 	const onSubmit = async () => {
 		valid = true;
-
 		if (fields.name.trim().length == 0) {
 			valid = false;
 			errors.name = "Please Enter Name";
