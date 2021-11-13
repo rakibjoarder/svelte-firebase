@@ -1,26 +1,39 @@
 <script>
-	let showModal = false;
-	export let people;
+	import { onDestroy, onMount } from "svelte";
+	import PersonStore from "../../stores/personstore";
+	import { fade, slide, scale } from "svelte/transition";
+	import { flip } from "svelte/animate";
+
+	let people = [];
+
+	var unsub = PersonStore.subscribe((data) => {
+		people = data;
+	});
+
+	onMount(() => {
+		console.log("MOUNT");
+	});
+
+	onDestroy(() => {
+		console.log("onDestroy");
+		unsub();
+	});
 
 	const onDelete = (id) => {
 		console.log(id);
-		people = people.filter((person) => person.id != id);
-	};
-	const onReset = () => {
-		people = [
-			{ name: "Rakib", age: 25, gender: "Male", id: 1 },
-			{ name: "Joarder", age: 52, gender: "Male", id: 2 },
-			{ name: "Rabita", age: 34, gender: "Female", id: 3 },
-		];
+		// people = people.filter((person) => person.id != id);
+		PersonStore.update((currentPerson) => {
+			return people.filter((person) => person.id != id);
+		});
 	};
 </script>
 
 <main>
-	<div>
-		<div class="tablehead">
+	<div in:fade out:scale>
+		<!-- <div class="tablehead">
 			<h3 style="flex: 0%;">Person Table</h3>
-			<button class="button" on:click>Add Person</button>
-		</div>
+			<!-- <button class="button" on:click>Add Person</button> -->
+		<!-- </div> -->
 		<table>
 			<tr>
 				<th>Name</th>
@@ -29,7 +42,7 @@
 				<th>Action</th>
 			</tr>
 			{#each people as person}
-				<tr>
+				<tr out:fade>
 					<td>{person.name}</td>
 					<td>{person.gender}</td>
 					<td>{person.age}</td>
@@ -40,36 +53,43 @@
 					>
 				</tr>
 			{:else}
-				<div>
-					<p>Empty Table</p>
-					<button
-						on:click={() => {
-							onReset();
-						}}>Load Again</button
-					>
-				</div>
+				<div class="emptyTable">No Person Available</div>
 			{/each}
+			<tr>
+				<th>Name</th>
+				<th>Gender</th>
+				<th>Age</th>
+				<th>Action</th>
+			</tr>
 		</table>
 	</div>
 </main>
 
 <style>
 	table {
-		font-family: arial, sans-serif;
+		font-family: roboto;
 		border-collapse: collapse;
 		width: 100%;
 	}
-	td,
+
 	th {
+		border: 1px solid #ffffff;
+		background-color: #3d3d3d;
+		color: white;
+		text-align: center;
+		padding: 8px;
+	}
+
+	td {
 		border: 1px solid #dddddd;
 		text-align: center;
 		padding: 8px;
 	}
 	tr:nth-child(even) {
-		background-color: rgb(110, 110, 110);
-		color: white;
+		background-color: rgb(230, 230, 230);
+		color: black;
 	}
-	.tablehead {
+	/* .tablehead {
 		background-color: rgb(110, 110, 110);
 		display: flex;
 		justify-content: center;
@@ -89,6 +109,10 @@
 	h3 {
 		color: rgb(255, 255, 255);
 		font-weight: bold;
+	} */
+
+	.emptyTable {
+		text-align: center;
 	}
 	/* @media (min-width: 640px) {
 		main {

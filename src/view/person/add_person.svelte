@@ -1,11 +1,14 @@
 <script>
+	import PersonStore from "../../stores/personstore";
+	import { fade, slide, scale } from "svelte/transition";
+
 	import { createEventDispatcher } from "svelte";
 
 	let dispatch = createEventDispatcher();
 	const fields = {
 		name: "",
 		age: "",
-		gender: "Male",
+		gender: "",
 	};
 	let valid = true;
 
@@ -47,12 +50,16 @@
 				id: Math.random(),
 			};
 			dispatch("addPerson", person);
+
+			PersonStore.update((currentPerson) => {
+				return [person, ...currentPerson];
+			});
 		}
 	};
 </script>
 
 <main>
-	<div class="formdiv">
+	<div class="formdiv" in:scale>
 		<p class="headerText">Add Person</p>
 		<form on:submit|preventDefault={onSubmit}>
 			<input

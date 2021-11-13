@@ -6,35 +6,27 @@
 	import Tabs from "./components/nav.svelte";
 
 	let showModal = false;
-	let people = [
-		{ name: "Rakib", age: 25, gender: "Male", id: 1 },
-		{ name: "Joarder", age: 52, gender: "Male", id: 2 },
-		{ name: "Rabita", age: 34, gender: "Female", id: 3 },
-	];
+	let tabItems = ["View Person", "Add Person"];
+	let activeTab = "View Person";
+
 	const addPerson = (e) => {
-		const person = e.detail;
-		people = [person, ...people];
+		// const person = e.detail;
+		// people = [person, ...people];
 		activeTab = "View Person";
 	};
 
-	let tabItems = ["View Person", "Add Person"];
-	let activeTab = "Add Person";
-
 	const changeTab = (e) => {
 		activeTab = e.detail;
-		console.log(e.detail);
 	};
 </script>
 
 <!-- header -->
-<Header title="Welcome To Svelte" />
+<Header />
 <main>
 	<!-- person table -->
 	<Tabs {tabItems} {activeTab} on:changeTab={changeTab} />
 	{#if activeTab == "View Person"}
 		<ViewPerson
-			{people}
-			{showModal}
 			on:click={() => {
 				showModal = !showModal;
 			}}
