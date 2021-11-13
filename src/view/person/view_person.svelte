@@ -3,11 +3,32 @@
 	import PersonStore from "../../stores/personstore";
 	import { fade, slide, scale } from "svelte/transition";
 	import { flip } from "svelte/animate";
+	import Firestoredb from "../../stores/firebase";
+	import {
+		collection,
+		doc,
+		addDoc,
+		updateDoc,
+		deleteDoc,
+		onSnapshot,
+	} from "firebase/firestore";
 
 	let people = [];
 
-	var unsub = PersonStore.subscribe((data) => {
-		people = data;
+	// var unsub = PersonStore.subscribe((data) => {
+	// 	people = data;
+	// });
+
+	let ref = collection(Firestoredb, "users");
+
+	// get person from firebase
+	const unsub = onSnapshot(ref, (snapshot) => {
+		let results = [];
+		snapshot.docs.forEach((doc) => {
+			results.push({ ...doc.data(), id: doc.id });
+		});
+
+		people = results;
 	});
 
 	onMount(() => {
@@ -16,24 +37,26 @@
 
 	onDestroy(() => {
 		console.log("onDestroy");
-		unsub();
+		// unsub();
 	});
 
-	const onDelete = (id) => {
+	const onDelete = async (id) => {
 		console.log(id);
 		// people = people.filter((person) => person.id != id);
-		PersonStore.update((currentPerson) => {
-			return people.filter((person) => person.id != id);
-		});
+
+		// update data in person store
+
+		// PersonStore.update((currentPerson) => {
+		// 	return people.filter((person) => person.id != id);
+		// });
+
+		await deleteDoc(doc(Firestoredb, "users", id));
+		// await deleteDoc(ref, id);
 	};
 </script>
 
 <main>
 	<div in:fade out:scale>
-		<!-- <div class="tablehead">
-			<h3 style="flex: 0%;">Person Table</h3>
-			<!-- <button class="button" on:click>Add Person</button> -->
-		<!-- </div> -->
 		<table>
 			<tr>
 				<th>Name</th>

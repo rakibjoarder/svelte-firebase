@@ -1,10 +1,21 @@
 <script>
 	import PersonStore from "../../stores/personstore";
 	import { fade, slide, scale } from "svelte/transition";
-
 	import { createEventDispatcher } from "svelte";
+	import Firestoredb from "../../stores/firebase";
+	import {
+		collection,
+		doc,
+		addDoc,
+		updateDoc,
+		onSnapshot,
+	} from "firebase/firestore";
 
 	let dispatch = createEventDispatcher();
+
+	// firestore
+	let ref = collection(Firestoredb, "users");
+
 	const fields = {
 		name: "",
 		age: "",
@@ -18,7 +29,7 @@
 		gender: "",
 	};
 
-	const onSubmit = () => {
+	const onSubmit = async () => {
 		valid = true;
 
 		if (fields.name.trim().length == 0) {
@@ -49,11 +60,15 @@
 				gender: fields.gender,
 				id: Math.random(),
 			};
-			dispatch("addPerson", person);
 
-			PersonStore.update((currentPerson) => {
+			// add user  to store
+			await PersonStore.update((currentPerson) => {
 				return [person, ...currentPerson];
 			});
+			// add user  to firebase
+			await addDoc(ref, person);
+
+			dispatch("addPerson", person);
 		}
 	};
 </script>
